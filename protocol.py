@@ -36,7 +36,14 @@ class AdbMessage(object):
 
     @property
     def header(self):
-        data_check = sum(ord(c) for c in self.data)
+        data_check = 0
+        for c in self.data:
+            if isinstance(c, str):
+                data_check += ord(c)
+            else:
+                data_check += c
+
+        #data_check = sum(ord(c) for c in self.data)
         #data_check = '\xbc\xb1\xa7\xb1'
         #data_check = ''
         #import zlib
@@ -59,7 +66,7 @@ class AdbMessage(object):
         return message, data[header.data_length:]
 
     def encode(self):
-        return self.header.encode() + self.data
+        return self.header.encode() + self.data.encode()
 
     def validate(self, header):
         #assert self.header == header
